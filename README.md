@@ -213,3 +213,20 @@ regions and explicit data-link-zone="cta" markers. Old snapshots still
 work and their placements are unknown. Capture a fresh source snapshot
 before making a placement claim. The command does not fetch or change
 website pages.
+
+## Run a quick SEO review
+
+    npm run review -- --config review/config/simpleparking-t3.json --db review.sqlite --history monitor.sqlite --export review.json --screenshot failure.png
+
+A review config references a page brief config and a booking journey config,
+with paths relative to the review config. The command freshly captures the
+target and up to nine supporting pages on the same origin. It audits those
+URLs, checks the booking journey in mobile Chromium, builds the content brief,
+and writes a run to the existing regression monitor history. The report includes
+step outcomes, snapshot IDs and original audit, journey and brief evidence.
+
+A capture failure does not stop the independent journey. If a required capture
+is unusable, the brief is skipped to avoid relying on an older snapshot.
+The command exits 0 on a complete review, 2 on a partial review, and 1 on a CLI
+or setup error. A complete review can still have SEO findings. This quick mode
+does not run full-site discovery or a separate link-health sweep.

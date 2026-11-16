@@ -74,10 +74,11 @@ function robots(fields) {
   };
 }
 
-export function auditSite(db, { hostname } = {}) {
+export function auditSite(db, { hostname, requestedUrls } = {}) {
   const pages = new Map();
   for (const row of db.prepare(latestCaptures).iterate()) {
     if (hostname && new URL(row.url).hostname !== hostname) continue;
+    if (requestedUrls && !requestedUrls.has(row.url)) continue;
     if (!pages.has(row.url)) pages.set(row.url, []);
     pages.get(row.url).push(row);
   }
