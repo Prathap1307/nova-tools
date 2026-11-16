@@ -271,3 +271,44 @@ curl.exe -X POST -H "Authorization: Bearer $env:NOVA_TOOLS_TOKEN" http://127.0.0
 | `GET /v1/sites/{site}/report` | Returns the latest complete or partial review for the configured site. |
 
 All routes require the bearer token. The server listens on `127.0.0.1`. Site IDs resolve to operator-configured review files. SQLite persists the queue, progress and reports under the selected data directory. One review runs at a time per queue database. After a restart, queued work can continue and an interrupted run is marked failed once its lease expires.
+
+## Website security header check
+
+Run `npm run --silent security -- --url https://www.simpleparking.uk/`. Repeat
+`--url` for up to ten public pages. The checker uses ordinary GET requests,
+follows same-host redirects, and outputs JSON with header observations and
+suggested fixes. A failed fetch is reported separately and sets exit code 2.
+The checks cover HTTPS, HSTS, CSP presence, framing policy, and MIME sniffing
+protection. They measure response configuration on sampled pages. Application
+logic, authentication, and the effectiveness of an existing CSP require
+separate review.
+
+## Internal business reports
+
+Run `npm run --silent business -- <tool> <input.json>` to write a JSON report.
+The fixture inputs in `test/business.test.mjs` illustrate each data contract.
+
+| Tool | Input |
+| --- | --- |
+| `access` | Expected and observed booking permission cases from a test harness. Compare allowed status, booking identity and whether state changed. |
+| `health` | Recorded HTTP status, duration and budget, optional JSON response fields, headers and certificate expiry. |
+| `operations` | Booking IDs, terminal, status and creation timestamp, plus a local date and IANA timezone. |
+| `finance` | Booking net amounts, payment/refund/fee transactions and payouts, with unique IDs and a single currency. |
+| `marketing` | Campaign spend and deduplicated sessions with quote and booking outcomes. |
+| `support` | Questions, expected facts, answer excerpts and saved page text for evidence matching. |
+
+Amounts use integer minor units. Finance inputs should cover the same
+reconciliation period. Marketing inputs must attribute each booking to at
+most one session. The CLI reads local exports. Live data ingestion, recurring
+monitoring and the Nova app connection are separate integrations.
+
+For a live public probe, run:
+
+```powershell
+npm run --silent health -- --url https://www.simpleparking.uk/ --max-ms 3000
+```
+
+Repeat `--field` to require non-null top-level fields on a public JSON API.
+The live probe checks one run and sets exit code 2 when a check fails.
+Certificate expiry can be evaluated from captured evidence via the
+`business health` input.
