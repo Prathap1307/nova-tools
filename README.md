@@ -94,3 +94,21 @@ require fresh comparable captures for previous members. Changing capture mode
 or extraction version may leave a finding unverified. Use the same hostname and
 scan coverage for the most informative comparisons. Original v0.3 JSON audits
 can be used as baselines. Use new filenames for JSON and CSV exports.
+
+## Check links from saved crawl snapshots
+
+    npm run links -- --site https://www.simpleparking.uk/ --db crawler.sqlite --mode auto --max-links 20 --export links.json --csv links.csv
+
+The checker opens SQLite read-only. It checks each unique in-scope destination
+once, prioritized by likely booking or quote links, and retains all source
+references and anchor text. Requests are paced per host. Robots denials,
+rate limits, off-scope redirects and transport errors are unverified.
+HTTP 404/410 and redirect loops or limits are broken. Homepage redirects,
+multi-hop chains, soft-404 candidates and missing rendered anchors require review.
+A soft-404 marker is a title or H1 heuristic and needs human confirmation.
+
+Auto mode reuses the Chromium renderer for app shells and missing raw anchors.
+New crawler snapshots preserve fragments. Existing snapshots from extraction
+versions 1–3 still work for HTTP link health. Recrawl source pages to add
+fragment evidence. The reports are point-in-time exports. Configured customer
+journey assertions and cross-run link history comparison are future work.

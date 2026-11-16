@@ -72,16 +72,28 @@ export async function follow(initial, { allowedHosts, fetcher, beforeFetch = asy
   const seen = new Set();
   for (;;) {
     validateScope(url, allowedHosts);
-    if (seen.has(url.href)) throw new Error('Redirect loop');
+    if (seen.has(url.href)) {
+      const error = new Error('Redirect loop');
+      error.code = 'REDIRECT_LOOP';
+      error.redirects = redirects;
+      throw error;
+    }
     seen.add(url.href);
     await beforeFetch(url);
     const response = await fetcher(url);
     if (![301, 302, 303, 307, 308].includes(response.status) || !response.headers.location)
       return { ...response, finalUrl: url, redirects };
-    if (redirects.length >= maxRedirects) throw new Error('Redirect limit reached');
+    if (redirects.length >= maxRedirects) {
+      const error = new Error('Redirect limit reached');
+      error.code = 'REDIRECT_LIMIT';
+      error.redirects = redirects;
+      throw error;
+    }
     const target = webUrl(response.headers.location, url);
     if (url.protocol === 'https:' && target.protocol !== 'https:') throw new Error('HTTPS downgrade blocked');
-    redirects.push({ url: url.href, status: response.status, target: target.href });
+    const fragment = new URL(response.headers.location, url).hash;
+    redirects.push({ url: url.href, status: response.status, target: target.href,
+      ...(fragment ? { fragment } : {}) });
     url = target;
   }
 }

@@ -1,7 +1,7 @@
 import { loadBuffer } from 'cheerio';
 import { webUrl } from './http.mjs';
 
-export const extractionVersion = 3;
+export const extractionVersion = 4;
 const clean = value => value.replace(/\s+/g, ' ').trim();
 
 function normalize(raw, base) {
@@ -25,9 +25,9 @@ export function extract(body, finalUrl, headers) {
   $('a[href]').each((_, node) => {
     const anchor = $(node);
     const raw = anchor.attr('href');
-    if (raw.trim().startsWith('#')) return;
-    const url = normalize(raw, base);
-    if (!url) return;
+    const normalized = normalize(raw, base);
+    if (!normalized || raw.trim() === '#') return;
+    const url = normalized + new URL(raw, base).hash;
     const text = clean(anchor.text()) || clean(anchor.attr('aria-label') || '');
     const type = new URL(url).hostname === new URL(finalUrl).hostname ? 'internal' : 'external';
     links.push({ url, anchor: text, kind: type });
