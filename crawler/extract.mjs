@@ -1,7 +1,7 @@
 import { loadBuffer } from 'cheerio';
 import { webUrl } from './http.mjs';
 
-export const extractionVersion = 4;
+export const extractionVersion = 5;
 const clean = value => value.replace(/\s+/g, ' ').trim();
 
 function normalize(raw, base) {
@@ -30,7 +30,12 @@ export function extract(body, finalUrl, headers) {
     const url = normalized + new URL(raw, base).hash;
     const text = clean(anchor.text()) || clean(anchor.attr('aria-label') || '');
     const type = new URL(url).hostname === new URL(finalUrl).hostname ? 'internal' : 'external';
-    links.push({ url, anchor: text, kind: type });
+    const placement = anchor.closest('footer,[role="contentinfo"]').length ? 'footer'
+      : anchor.closest('nav,[role="navigation"]').length ? 'navigation'
+        : anchor.closest('[data-link-zone="cta"]').length ? 'cta'
+          : anchor.closest('main,[role="main"],article').length ? 'main'
+            : anchor.closest('header').length ? 'navigation' : 'unknown';
+    links.push({ url, anchor: text, kind: type, placement });
     if (/\bquote\b/i.test(text) || /(?:^|[/-])quote(?:[/-]|$)/i.test(new URL(url).pathname))
       quoteLinks.push({ url, text });
   });
@@ -54,6 +59,7 @@ export function extract(body, finalUrl, headers) {
       xRobotsTag: headers['x-robots-tag'] || null,
       headings,
       quoteLinks,
+      linkPlacements: links.map(link => link.placement),
       mainText: clean(text.text()).slice(0, 50000) || null
     },
     links

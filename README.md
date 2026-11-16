@@ -196,3 +196,20 @@ are required. The builder does not crawl or send data to an AI API.
 Patterns are checklist heuristics and a lack of a match means evidence was
 not located in the supplied captures. For prices, insurance, cancellation
 and handover claims, confirm the current terms with Operations before editing.
+
+## Find internal link opportunities
+
+    npm run internal-links -- --db crawler.sqlite --config internal-links/config/simpleparking-t3.json --link-health links.json --export link-opportunities.json
+
+Supply source/target pairs and optional context patterns. The tool uses the
+latest usable source snapshots, recorded links, target audit findings and
+optional Link Health evidence. It distinguishes keep, move closer, add,
+review target and unverified. A review-target row retains the underlying
+placement recommendation. Filter and curate the candidate pairs before
+treating them as editorial recommendations.
+
+Crawler extraction v5 adds link placements inferred from semantic HTML
+regions and explicit data-link-zone="cta" markers. Old snapshots still
+work and their placements are unknown. Capture a fresh source snapshot
+before making a placement claim. The command does not fetch or change
+website pages.

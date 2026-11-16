@@ -1,0 +1,29 @@
+{
+  "site": "https://www.simpleparking.uk/",
+  "pairs": [
+    {
+      "source": "https://www.simpleparking.uk/heathrow-terminal-3-parking",
+      "target": "https://www.simpleparking.uk/faq",
+      "anchor": "How to collect your car after landing",
+      "contextPattern": "return delivery|return process"
+    },
+    {
+      "source": "https://www.simpleparking.uk/heathrow-terminal-3-parking",
+      "target": "https://www.simpleparking.uk/heathrow-terminal-3-meet-and-greet",
+      "anchor": "Terminal 3 Meet & Greet guide",
+      "contextPattern": "Northern Perimeter Road|return process"
+    },
+    {
+      "source": "https://www.simpleparking.uk/faq",
+      "target": "https://www.simpleparking.uk/heathrow-terminal-3-parking",
+      "anchor": "Heathrow Terminal 3 parking and drop-off directions",
+      "contextPattern": "terminal drop-off area|drop-off point"
+    },
+    {
+      "source": "https://www.simpleparking.uk/faq",
+      "target": "https://www.simpleparking.uk/heathrow-terminal-3-meet-and-greet",
+      "anchor": "Terminal 3 meet and greet guide",
+      "contextPattern": "text us when you land"
+    }
+  ]
+}
