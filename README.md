@@ -57,3 +57,21 @@ capture mode, timestamps, flags and diffs. Use a new filename for each export.
 Site stdout contains compact snapshot references. Single-page stdout includes
 the full capture. This version runs a bounded scan in one process and does not
 schedule or resume background jobs.
+
+## Audit captured pages
+
+    npm run audit -- --db crawler.sqlite --site https://www.simpleparking.uk/ --export seo-audit.json
+
+The checker opens the SQLite database read-only and uses the latest completed
+or failed scan for each requested URL. If the latest scan produced a raw and
+browser pair, it uses the browser capture and retains the raw snapshot as
+evidence. Scope by exact hostname with --site, or omit it to audit all stored
+sites. For a v0.1 database, run a crawl or scan to apply the existing migration
+before auditing.
+
+The JSON report groups homepage canonicals, duplicate titles and descriptions,
+missing titles/descriptions/H1s, noindex and contradictory directives, unusable
+captures and content available only after JavaScript rendering. Findings include
+severity, a review action and snapshot IDs. Duplicate metadata uses usable pages
+and groups by final hostname. Canonical and robots findings show declarations
+observed on the site. Search Console data is needed to verify actual indexing.
