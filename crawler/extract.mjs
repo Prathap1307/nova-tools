@@ -1,7 +1,7 @@
 import { loadBuffer } from 'cheerio';
 import { webUrl } from './http.mjs';
 
-export const extractionVersion = 1;
+export const extractionVersion = 3;
 const clean = value => value.replace(/\s+/g, ' ').trim();
 
 function normalize(raw, base) {
@@ -42,7 +42,8 @@ export function extract(body, finalUrl, headers) {
   })).get();
   const core = $('main,[role="main"],article').first();
   const text = (core.length ? core : $('body')).clone();
-  text.find('script,style,template,noscript,nav,footer,header,aside').remove();
+  text.find('script,style,template,noscript,nav,footer,aside,[hidden],[aria-hidden="true"]').remove();
+  text.find('h1,h2,h3,h4,h5,h6,p,div,section,li,br,dt,dd,blockquote').append(' ');
 
   return {
     fields: {

@@ -1,30 +1,59 @@
-# Nova Tools · Single-page crawler
+# Nova Tools · Website crawler
 
-A standalone Node.js CLI. It records public HTML page snapshots and field-level
-changes in SQLite. Node.js 24 is required. No Nova account or AI key is needed.
+Discover public pages, capture HTTP or Chromium snapshots, and compare compatible
+captures in SQLite. Runs locally with Node.js 24 and Playwright Chromium.
 
-From this directory:
+## Setup
 
     npm ci
+    npx playwright install chromium --only-shell
     npm test
-    node crawler/cli.mjs --url https://example.com/ --db crawler.sqlite
 
-Run the same command again to compare with the latest compatible snapshot for
-that exact requested URL. The CLI prints JSON. Failures are recorded in
-crawl_runs and the CLI exits with a nonzero status.
+On Windows, set PLAYWRIGHT_BROWSERS_PATH before installing and running if the
+default browser cache is on a drive with limited space.
 
-Redirects stay on the original hostname by default. For a known redirect to
-another public host, explicitly add a flag such as --allow-host www.example.com.
-The scanner checks robots.txt, limits redirects and response size, and refuses
-private network addresses. It extracts HTTP HTML, including title, headings,
-description, canonical, robots directives, anchor links and candidate quote links.
-A quote link is inferred from its label or path. It does not click or submit a form.
-The tool captures the main text separately, so a heading change can also change
-the main-text field.
+## Single page
 
-SQLite migration 001 creates crawl_runs, page_snapshots, page_links and
-page_changes. Snapshots, links and diffs commit together. Snapshots with a
-different extraction version or capture mode are outside the comparison.
+    npm run scan -- --url https://www.simpleparking.uk/faq --mode auto --db crawler.sqlite --export faq.json
 
-The current slice scans one URL at a time. Sitemap discovery, JavaScript browser
-rendering, queued jobs, export and Nova API integration are future slices.
+The legacy scan command defaults to http. browser captures the rendered DOM.
+auto starts with HTTP and renders when usable content is absent. It keeps both
+captures when it falls back. A title, canonical, or HTTP 200 alone does not make
+a capture usable. An unsuccessful browser fallback preserves the HTTP capture
+and reports renderError. The rendered capture can read question-and-answer
+disclosures with safe button controls outside forms.
+
+## Bounded site discovery
+
+    npm run crawl -- --site https://www.simpleparking.uk/ --mode auto --db crawler.sqlite --max-pages 20 --sitemap-host pyczpjdxrzyoufaumryn.supabase.co --export simpleparking.json
+
+The homepage starts the queue. Robots sitemap declarations (or /sitemap.xml as
+a fallback), nested indexes, and in-scope links add unique URLs. Fragments are
+removed; query strings and distinct canonical URLs remain separate. Site scans
+default to 200 ms between starts on the same host. Adjust with --delay-ms.
+The report includes attempted pages, usability, browser attempts, sitemap
+outcomes, duplicates, skipped pages, and failures. A robots denial consumes
+one attempted-page slot. Discovery caps are 30 sitemap files and 10,000 URLs.
+
+--allow-host adds an exact hostname to page scope.
+--sitemap-host permits metadata discovery without widening page scope.
+--asset-host permits specific external scripts, styles and read requests in
+Chromium without widening page scope. Third-party hosts are excluded by default.
+Chromium is routed through the same public-address, redirect and robots checks
+as HTTP scans. It blocks non-GET requests, WebSockets, service workers and
+unsolicited document navigations. It does not sign in or submit forms.
+
+## History and export
+
+Existing databases upgrade automatically. Requested, final and canonical URLs
+are stored separately. homepage_canonical_on_non_homepage flags a canonical
+declared to a site's root without merging the pages. Changes compare the
+latest snapshot for the same requested URL, capture mode and extraction version.
+The first snapshot for a combination is a baseline. Browser captures have an
+answers array and may also include those answers in page text.
+
+--export writes a new JSON file with URLs, metadata, headings, clean text, links,
+capture mode, timestamps, flags and diffs. Use a new filename for each export.
+Site stdout contains compact snapshot references. Single-page stdout includes
+the full capture. This version runs a bounded scan in one process and does not
+schedule or resume background jobs.

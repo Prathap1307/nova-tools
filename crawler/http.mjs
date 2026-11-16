@@ -17,21 +17,22 @@ function publicAddress(address) {
   return ipaddr.process(address).range() === 'unicast';
 }
 
-export function fetchPublic(url) {
+export function fetchPublic(url, { signal, maxBytes = 2 * 1024 * 1024 } = {}) {
   return new Promise((resolve, reject) => {
     const transport = url.protocol === 'https:' ? https : http;
     const request = transport.get(url, {
       agent: false,
-      signal: AbortSignal.timeout(12000),
+      signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(12000)]) : AbortSignal.timeout(12000),
       headers: { 'User-Agent': agent, Accept: 'text/html, text/plain, application/xhtml+xml, */*;q=0.1' },
       lookup(host, options, callback) {
         lookup(host, { all: true, family: options.family || 0 }).then(addresses => {
-          if (!addresses.length || addresses.some(({ address }) => !publicAddress(address))) {
+          const eligible = addresses.filter(({ address }) => publicAddress(address));
+          if (!eligible.length) {
             callback(new Error('URL resolves to a non-public address'));
           } else if (options.all) {
-            callback(null, addresses);
+            callback(null, eligible);
           } else {
-            callback(null, addresses[0].address, addresses[0].family);
+            callback(null, eligible[0].address, eligible[0].family);
           }
         }, callback);
       }
@@ -41,8 +42,8 @@ export function fetchPublic(url) {
       response.on('error', reject);
       response.on('data', chunk => {
         size += chunk.length;
-        if (size > 2 * 1024 * 1024) {
-          const error = new Error('Response exceeded 2 MiB');
+        if (size > maxBytes) {
+          const error = new Error('Response exceeded ' + maxBytes + ' bytes');
           response.destroy(error);
           reject(error);
         } else chunks.push(chunk);
