@@ -6,14 +6,14 @@ import { openDatabase } from '../crawler/scan.mjs';
 import { openMonitor } from '../monitor/store.mjs';
 import { reviewSite } from './run.mjs';
 
-const usage = 'npm run review -- --config review/config/simpleparking-t3.json [--db review.sqlite] [--history monitor.sqlite] [--export review.json] [--screenshot failure.png]';
+const usage = 'npm run review -- --config review/config/simpleparking-t3.json [--mode quick|site] [--db review.sqlite] [--history monitor.sqlite] [--export review.json] [--screenshot failure.png]';
 const json = async url => JSON.parse((await readFile(url, 'utf8')).replace(/^\uFEFF/, ''));
 let db;
 let monitor;
 try {
   const { values } = parseArgs({ options: {
     config: { type: 'string' }, db: { type: 'string', default: 'review.sqlite' },
-    history: { type: 'string', default: 'monitor.sqlite' }, export: { type: 'string' },
+    history: { type: 'string' }, mode: { type: 'string', default: 'quick' }, export: { type: 'string' },
     screenshot: { type: 'string' }, help: { type: 'boolean' }
   } });
   if (values.help) console.log(usage);
@@ -26,8 +26,9 @@ try {
       json(new URL(config.journeyConfig, configUrl))
     ]);
     db = openDatabase(values.db);
-    monitor = openMonitor(values.history);
-    const report = await reviewSite(db, monitor, { brief, journey }, { screenshot: values.screenshot });
+    monitor = openMonitor(values.history ?? (values.mode === "site" ? "site-monitor.sqlite" : "monitor.sqlite"));
+    const report = await reviewSite(db, monitor, { brief, journey, siteOptions: config.siteReview },
+      { screenshot: values.screenshot, mode: values.mode });
     if (values.export) await writeFile(values.export, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
     const output = values.export ? { outcome: report.outcome, steps: report.steps, summary: report.summary } : report;
     process.stdout.write(JSON.stringify(output, null, 2) + '\n');

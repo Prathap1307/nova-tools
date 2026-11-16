@@ -230,3 +230,20 @@ is unusable, the brief is skipped to avoid relying on an older snapshot.
 The command exits 0 on a complete review, 2 on a partial review, and 1 on a CLI
 or setup error. A complete review can still have SEO findings. This quick mode
 does not run full-site discovery or a separate link-health sweep.
+
+## Run a bounded site-wide SEO review
+
+    npm run review -- --mode site --config review/config/simpleparking-t3.json --db review.sqlite --history site-monitor.sqlite --export site-review.json
+
+Site mode discovers pages from sitemap and internal links and attempts the
+homepage, brief target and supporting pages before the rest of the queue.
+The config's siteReview object sets maxPages, maxLinks, sitemapHosts and
+optional assetHosts. Audit and link sources use only URLs attempted or captured
+during the current review. The independent booking journey and content brief
+remain part of the workflow.
+
+The report orders failed booking journeys first, then actionable link and SEO
+findings and content changes. It retains grouped evidence and the original
+tool results. Site history defaults to site-monitor.sqlite to keep comparisons
+separate from quick reviews. Out-of-scope or omitted checks are unverified
+when comparing history. A completed run can still have actionable findings.

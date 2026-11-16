@@ -20,12 +20,12 @@ const latestLinks = `
   ORDER BY snap.requested_url, link.position
 `;
 
-function destinations(db, hosts) {
+function destinations(db, hosts, sourceUrls) {
   const targets = new Map();
   let outsideScopeReferences = 0;
   const legacySnapshots = new Set();
   for (const row of db.prepare(latestLinks).iterate()) {
-    if (!hosts.has(new URL(row.requested_url).hostname)) continue;
+    if (!hosts.has(new URL(row.requested_url).hostname) || (sourceUrls && !sourceUrls.has(row.requested_url))) continue;
     if (row.extraction_version < 4) legacySnapshots.add(row.id);
     let url;
     try {
@@ -140,14 +140,14 @@ async function check(target, options) {
 }
 
 export async function checkLinks(db, site, { mode = 'auto', maxLinks = 50, delayMs = 250,
-  extraHosts = [], assetHosts = [], onlyUrls, fetcher, renderer, timeout } = {}) {
+  extraHosts = [], assetHosts = [], onlyUrls, sourceUrls, fetcher, renderer, timeout } = {}) {
   const seed = webUrl(site);
   if (!['http', 'auto', 'browser'].includes(mode)) throw new Error('Use http, auto, or browser');
   if (!Number.isInteger(maxLinks) || maxLinks < 1 || maxLinks > 2000)
     throw new Error('max-links must be between 1 and 2000');
   if (!Number.isInteger(delayMs) || delayMs < 0 || delayMs > 60000) throw new Error('Invalid delay-ms');
   const hosts = new Set([seed.hostname, ...extraHosts]);
-  const { targets: allTargets, outsideScopeReferences, legacySnapshotsWithLinks } = destinations(db, hosts);
+  const { targets: allTargets, outsideScopeReferences, legacySnapshotsWithLinks } = destinations(db, hosts, sourceUrls);
   const targets = onlyUrls ? allTargets.filter(target => onlyUrls.has(target.url)) : allTargets;
   const policy = createPolicy({ fetcher, delayMs });
   const engine = renderer ?? (mode === 'http' ? undefined : createRenderer());

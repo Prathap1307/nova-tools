@@ -1,4 +1,9 @@
 {
   "briefConfig": "../../brief/config/simpleparking-t3.json",
-  "journeyConfig": "../../journeys/config/simpleparking-t3.json"
+  "journeyConfig": "../../journeys/config/simpleparking-t3.json",
+  "siteReview": {
+    "maxPages": 20,
+    "maxLinks": 20,
+    "sitemapHosts": ["pyczpjdxrzyoufaumryn.supabase.co"]
+  }
 }

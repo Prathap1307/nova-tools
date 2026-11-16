@@ -20,7 +20,7 @@ function sitemapEntries(bytes) {
 }
 
 export async function crawlSite(db, site, { mode = 'auto', maxPages = 20, extraHosts = [],
-  sitemapHosts = [], assetHosts = [], fetcher, delayMs = 200, renderer, timeout } = {}) {
+  sitemapHosts = [], assetHosts = [], priorityUrls = [], fetcher, delayMs = 200, renderer, timeout } = {}) {
   if (!Number.isInteger(maxPages) || maxPages < 1 || maxPages > 2000)
     throw new Error('max-pages must be between 1 and 2000');
   const seed = webUrl(site);
@@ -54,6 +54,7 @@ export async function crawlSite(db, site, { mode = 'auto', maxPages = 20, extraH
     queue.push({ url: url.href, source });
   }
   discover(seed.href, 'seed');
+  for (const url of priorityUrls) discover(url, 'priority', seed);
   const seenMaps = new Set();
   async function visitMap(input, base) {
     let url;
@@ -92,12 +93,14 @@ export async function crawlSite(db, site, { mode = 'auto', maxPages = 20, extraH
       sitemaps.push({ url: new URL('/robots.txt', seed).href, outcome: 'failed', reason: error.message });
     }
     let attempted = 0;
+    const attemptedUrls = [];
     for (const entry of queue) {
       if (attempted >= maxPages) {
         skipped.push({ ...entry, reason: 'page limit reached' });
         continue;
       }
       attempted++;
+      attemptedUrls.push(entry.url);
       try {
         const result = await scanPage(db, entry.url, { mode, policy, renderer: engine,
           extraHosts: [...pagesScope], assetHosts, timeout });
@@ -120,7 +123,7 @@ export async function crawlSite(db, site, { mode = 'auto', maxPages = 20, extraH
       usable: snapshots.filter(page => page.outcome === 'usable').length,
       browserAttempted: browserAttempts,
       rendered: snapshots.filter(page => page.mode === 'browser').length,
-      duplicates, discoveryOverflow: overflow, skipped, failed, sitemaps, snapshots };
+      duplicates, discoveryOverflow: overflow, attemptedUrls, skipped, failed, sitemaps, snapshots };
   } finally {
     if (!renderer) await engine?.close();
   }
