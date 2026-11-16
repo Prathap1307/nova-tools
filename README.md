@@ -312,3 +312,9 @@ Repeat `--field` to require non-null top-level fields on a public JSON API.
 The live probe checks one run and sets exit code 2 when a check fails.
 Certificate expiry can be evaluated from captured evidence via the
 `business health` input.
+
+Pass `--db health.sqlite` to persist a public probe and report its transition
+(`baseline`, `unchanged`, `degraded`, or `recovered`). Older observations
+are labeled `stale`. The URL, latency budget, and required fields identify
+a probe. Run the same command with the same database from your scheduler
+to track changes over time.
