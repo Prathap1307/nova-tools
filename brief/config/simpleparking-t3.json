@@ -1,0 +1,74 @@
+{
+  "target": "https://www.simpleparking.uk/heathrow-terminal-3-parking",
+  "support": ["https://www.simpleparking.uk/faq"],
+  "keyword": "Heathrow Terminal 3 meet and greet parking",
+  "journeyContextAction": "Agree whether the Terminal 3 CTA should carry the terminal into the homepage quote form. The form opened successfully, but the saved journey showed no Terminal 3 marker.",
+  "questions": [
+    {
+      "id": "collection", "question": "How do I get my car back after landing?",
+      "priority": "high", "owner": "Website / Operations",
+      "existingLinkPattern": "/heathrow-terminal-3-meet-and-greet(?:\\s|$)|/faq(?:$|#|\\s)",
+      "criteria": [
+        { "label": "Return delivery to arrivals", "patterns": ["return delivery", "arrivals"] },
+        { "label": "Customer contact after landing", "patterns": ["text us", "when you land"] },
+        { "label": "Where to find the return contact number", "patterns": ["text us", "number", "confirmation email"] }
+      ],
+      "keep": "Keep the collection directions and contact step.",
+      "improve": "Keep the existing Terminal 3 guide link. Verify the return instructions with Operations, then put a short callout near the CTA or make the guide link easier to find.",
+      "verify": "Confirm the Terminal 3 return procedure and contact details with Operations."
+    },
+    {
+      "id": "handover-timing", "question": "How long does the handover take?",
+      "priority": "high", "owner": "Operations", "requireVerification": true,
+      "criteria": [
+        { "label": "Published handover estimate", "patterns": ["(?:2[-–]3|5) minutes", "handover|drop-off"] }
+      ],
+      "keep": "Keep the verified estimate.",
+      "improve": "Show a consistent, verified expectation.",
+      "verify": "Reconcile the Terminal 3 estimate of 2–3 minutes with the FAQ estimate of 5 minutes. Confirm whether one is terminal-specific before changing either page."
+    },
+    {
+      "id": "meet-driver", "question": "Where do I meet the Terminal 3 driver?",
+      "priority": "high", "owner": "Website",
+      "criteria": [
+        { "label": "Forecourt and approach road", "patterns": ["forecourt", "Northern Perimeter Road"] },
+        { "label": "Driver arrival contact", "patterns": ["driver will text", "location"] }
+      ],
+      "keep": "Keep the existing drop-off directions and driver-contact guidance.",
+      "improve": "Clarify the verified meeting point on the Terminal 3 page.",
+      "verify": "Confirm the meeting point and driver contact arrangement with Operations."
+    },
+    {
+      "id": "starting-price", "question": "What price does Terminal 3 parking start from?",
+      "priority": "medium", "owner": "Operations",
+      "criteria": [
+        { "label": "Published starting price and unit", "patterns": ["(?:from|starts from)", "£\\d+(?:\\.\\d+)?", "(?:/|per )day"] }
+      ],
+      "keep": "Keep the starting-price wording and unit. Confirm the current price before publishing any copy change.",
+      "improve": "Add a starting price and unit only once verified.",
+      "verify": "Confirm current prices and what the starting price includes."
+    },
+    {
+      "id": "insurance", "question": "Does insurance cover the customer's vehicle?",
+      "priority": "medium", "owner": "Operations",
+      "criteria": [
+        { "label": "Insured-driver claim on the target page", "patterns": ["insured driver"] },
+        { "label": "Vehicle cover while in the operator's care", "patterns": ["vehicle is fully insured", "in our care"] }
+      ],
+      "keep": "Keep verified vehicle-cover wording.",
+      "improve": "Confirm vehicle-cover wording and exclusions before adding a short summary or an insurance FAQ link. The Terminal 3 page's insured-driver claim is narrower than the general FAQ statement.",
+      "verify": "Confirm scope and exclusions with Operations before adding an insurance claim."
+    },
+    {
+      "id": "cancellation", "question": "Can I cancel or change a booking?",
+      "priority": "medium", "owner": "Operations / Website",
+      "criteria": [
+        { "label": "Cancellation cutoff", "patterns": ["cancel free", "24 hours"] },
+        { "label": "How to request a change", "patterns": ["modify", "account or contact us"] }
+      ],
+      "keep": "Keep the verified policy and route to manage a booking.",
+      "improve": "Confirm these terms apply to Terminal 3 and link to the policy or FAQ at the point it is useful. Avoid duplicating policy wording.",
+      "verify": "Confirm the current policy and change process with Operations."
+    }
+  ]
+}

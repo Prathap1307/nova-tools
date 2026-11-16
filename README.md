@@ -180,3 +180,19 @@ unless independently measured by a future source. Search Console impressions
 are observed performance for the supplied rows. Overlap signals require
 investigation, and an unmatched seed requires a coverage check before
 planning a new page. The command does not crawl, call AI or modify SQLite.
+
+## Build a content gap brief
+
+    npm run brief -- --db crawler.sqlite --config brief/config/simpleparking-t3.json --keywords opportunities.json --journey journey.json --export brief.json --markdown brief.md
+
+The checklist defines a target, supporting URLs, keyword group, customer
+questions and evidence patterns. Each question is marked covered, partly
+covered, missing, or needs verification. The report includes snapshot
+references, excerpts, existing links and prioritized actions. The Markdown
+file is ready for a website team to review. Keyword and journey reports
+are optional contextual inputs. Usable saved target and support snapshots
+are required. The builder does not crawl or send data to an AI API.
+
+Patterns are checklist heuristics and a lack of a match means evidence was
+not located in the supplied captures. For prices, insurance, cancellation
+and handover claims, confirm the current terms with Operations before editing.
