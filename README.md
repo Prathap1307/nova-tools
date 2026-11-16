@@ -161,3 +161,22 @@ Choose new filenames for reports and screenshots.
 
 This version combines point-in-time reports with optional live rechecks.
 Schedules and notifications are not part of this release.
+
+## Map keyword opportunities to saved pages
+
+    npm run keywords -- --site https://www.simpleparking.uk/ --db crawler.sqlite --seed "Heathrow Terminal 3 meet and greet parking" --export opportunities.json
+
+Repeat --seed to supply candidates or add --search-console query-pages.csv.
+The optional CSV must have Query, Page (or Landing URL), Clicks, Impressions
+and Position on each row, with one reporting period aggregated by query and
+page. A Queries-only or Pages-only download cannot show page/query overlap.
+Rows for other hostnames are excluded and counted.
+
+The mapper ranks usable snapshots from the latest scan with editable
+heuristics based on titles, paths, headings, body text and search intent.
+T3 and Terminal 3 variants group together when their other terms match.
+Scores measure content fit. Search volume and ranking difficulty are null
+unless independently measured by a future source. Search Console impressions
+are observed performance for the supplied rows. Overlap signals require
+investigation, and an unmatched seed requires a coverage check before
+planning a new page. The command does not crawl, call AI or modify SQLite.
