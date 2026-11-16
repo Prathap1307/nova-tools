@@ -1,0 +1,8 @@
+{
+  "sites": {
+    "simpleparking": {
+      "reviewConfig": "../../review/config/simpleparking-t3.json",
+      "mode": "site"
+    }
+  }
+}

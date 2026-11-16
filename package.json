@@ -1,6 +1,6 @@
 {
   "name": "nova-tools",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -17,7 +17,8 @@
     "keywords": "node keywords/cli.mjs",
     "brief": "node brief/cli.mjs",
     "internal-links": "node internal-links/cli.mjs",
-    "review": "node review/cli.mjs"
+    "review": "node review/cli.mjs",
+    "jobs": "node jobs/cli.mjs"
   },
   "dependencies": {
     "cheerio": "^1.1.2",

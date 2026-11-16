@@ -247,3 +247,27 @@ findings and content changes. It retains grouped evidence and the original
 tool results. Site history defaults to site-monitor.sqlite to keep comparisons
 separate from quick reviews. Out-of-scope or omitted checks are unverified
 when comparing history. A completed run can still have actionable findings.
+
+## Nova Tools Job Runner API
+
+Run the local API with Node.js and Playwright Chromium installed as described above. In PowerShell:
+
+```powershell
+$env:NOVA_TOOLS_TOKEN = node -p "require('node:crypto').randomBytes(32).toString('hex')"
+npm run jobs -- --config jobs/config/sites.json --data-dir .nova-jobs --port 8787
+```
+
+In a client using the same token, send an empty POST to start the configured SimpleParking review:
+
+```powershell
+curl.exe -X POST -H "Authorization: Bearer $env:NOVA_TOOLS_TOKEN" http://127.0.0.1:8787/v1/sites/simpleparking/jobs
+```
+
+| Method and path | Result |
+| --- | --- |
+| `POST /v1/sites/{site}/jobs` | HTTP 202 with a job and a status URL in `Location`. A repeated request while the site has an active job returns the same ID with `reused: true`. |
+| `GET /v1/jobs/{id}` | Poll for `queued`, `running`, `complete`, `partial`, or `failed`, plus completed step results. |
+| `GET /v1/jobs/{id}/report` | Returns the review and job metadata when the review is complete or partial. Returns HTTP 409 if the job has no report. |
+| `GET /v1/sites/{site}/report` | Returns the latest complete or partial review for the configured site. |
+
+All routes require the bearer token. The server listens on `127.0.0.1`. Site IDs resolve to operator-configured review files. SQLite persists the queue, progress and reports under the selected data directory. One review runs at a time per queue database. After a restart, queued work can continue and an interrupted run is marked failed once its lease expires.

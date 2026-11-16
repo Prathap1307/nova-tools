@@ -32,7 +32,7 @@ function describe(capture) {
 }
 
 export async function reviewSite(db, monitorDb, { brief, journey, siteOptions = {} },
-  { fetcher, renderer, screenshot, mode = 'quick' } = {}) {
+  { fetcher, renderer, screenshot, mode = 'quick', onStep = () => {} } = {}) {
   const { site, hostname, target, urls } = settings(brief, journey);
   if (!['quick', 'site'].includes(mode)) throw new Error('Review mode must be quick or site');
   const maxPages = siteOptions.maxPages ?? 20;
@@ -46,7 +46,11 @@ export async function reviewSite(db, monitorDb, { brief, journey, siteOptions = 
   const report = { site, target, mode, startedAt: date(), steps: [], captures: [] };
   const policy = createPolicy({ fetcher, delayMs: 200 });
   const engine = renderer ?? createRenderer();
-  const step = (name, status, evidence = {}) => report.steps.push({ name, status, ...evidence });
+  const step = (name, status, evidence = {}) => {
+    const completed = { name, status, ...evidence };
+    report.steps.push(completed);
+    onStep(completed);
+  };
   let audit;
   let crawl;
   let links;

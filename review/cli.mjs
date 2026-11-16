@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { loadReviewConfig } from './config.mjs';
+import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -7,7 +8,6 @@ import { openMonitor } from '../monitor/store.mjs';
 import { reviewSite } from './run.mjs';
 
 const usage = 'npm run review -- --config review/config/simpleparking-t3.json [--mode quick|site] [--db review.sqlite] [--history monitor.sqlite] [--export review.json] [--screenshot failure.png]';
-const json = async url => JSON.parse((await readFile(url, 'utf8')).replace(/^\uFEFF/, ''));
 let db;
 let monitor;
 try {
@@ -20,14 +20,10 @@ try {
   else {
     if (!values.config) throw new Error(usage);
     const configUrl = pathToFileURL(resolve(values.config));
-    const config = await json(configUrl);
-    const [brief, journey] = await Promise.all([
-      json(new URL(config.briefConfig, configUrl)),
-      json(new URL(config.journeyConfig, configUrl))
-    ]);
+    const config = await loadReviewConfig(configUrl);
     db = openDatabase(values.db);
     monitor = openMonitor(values.history ?? (values.mode === "site" ? "site-monitor.sqlite" : "monitor.sqlite"));
-    const report = await reviewSite(db, monitor, { brief, journey, siteOptions: config.siteReview },
+    const report = await reviewSite(db, monitor, config,
       { screenshot: values.screenshot, mode: values.mode });
     if (values.export) await writeFile(values.export, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
     const output = values.export ? { outcome: report.outcome, steps: report.steps, summary: report.summary } : report;
