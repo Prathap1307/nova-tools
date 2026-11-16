@@ -20,3 +20,25 @@ test('health history survives reopen and reports degradation and recovery per pr
   assert.equal(sample(5, true), 'unchanged');
   assert.equal(sample(5, false, 'faq'), 'baseline');
 });
+
+test('alerts confirm two distinct failures and recover once after restart', t => {
+  const directory = mkdtempSync(join(tmpdir(), 'nova-alert-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const db = join(directory, 'health.sqlite');
+  function sample(day, passed, probe = 'homepage') {
+    return recordHealth(db, [{ probe, passed, checkedAt: '2026-01-0' + day, failures: passed ? [] : ['timeout'] }])[0];
+  }
+  assert.equal(sample(1, true).alert, undefined);
+  assert.equal(sample(2, false).alert, undefined);
+  assert.equal(sample(2, false).transition, 'duplicate');
+  assert.equal(sample(3, true).alert, undefined);
+  assert.equal(sample(4, false).alert, undefined);
+  assert.equal(sample(5, false, 'faq').alert, undefined);
+  assert.deepEqual(sample(5, false).alert, { kind: 'outage', startedAt: '2026-01-04',
+    detectedAt: '2026-01-05', failures: ['timeout'] });
+  assert.equal(sample(6, false).alert, undefined);
+  assert.equal(sample(4, true).alert, undefined);
+  assert.deepEqual(sample(7, true).alert, { kind: 'recovery', startedAt: '2026-01-04',
+    detectedAt: '2026-01-07' });
+  assert.equal(sample(8, true).alert, undefined);
+});

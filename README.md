@@ -318,3 +318,17 @@ Pass `--db health.sqlite` to persist a public probe and report its transition
 are labeled `stale`. The URL, latency budget, and required fields identify
 a probe. Run the same command with the same database from your scheduler
 to track changes over time.
+
+### Scheduled health checks
+
+```powershell
+npm run --silent health -- --watch --db health.sqlite --url https://www.simpleparking.uk/ --url https://www.simpleparking.uk/faq --url https://www.simpleparking.uk/heathrow-terminal-3-parking
+```
+
+Watch mode checks immediately and every 900 seconds by default. Keep one
+runner per probe configuration on an awake machine. Each run emits one JSON
+line on stdout. An `alert` appears after two consecutive failures, with the
+first failure time and the latest error. One recovery alert follows when the
+probe passes. Observations and alerts are stored together in SQLite, so
+deduplication survives restarting the process. For a bounded smoke test use
+`--interval-seconds 1 --runs 2`. Stop the foreground runner with Ctrl+C.
