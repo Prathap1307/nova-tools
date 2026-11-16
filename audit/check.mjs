@@ -1,3 +1,6 @@
+import { findingId } from './compare.mjs';
+import { compareRenderedFields } from './rendered-fields.mjs';
+
 const severityOrder = { high: 0, medium: 1, low: 2, info: 3 };
 const latestCaptures = `
   WITH roots AS (
@@ -6,7 +9,7 @@ const latestCaptures = `
     GROUP BY requested_url
   )
   SELECT roots.requested_url AS url, roots.root_id, run.id AS run_id,
-    run.state, run.error, snap.id AS snapshot_id, snap.final_url,
+    run.state, run.error, run.finished_at, snap.id AS snapshot_id, snap.final_url,
     snap.observed_at, snap.mode, snap.http_status, snap.extraction_version,
     snap.fields, snap.outcome
   FROM roots JOIN crawl_runs run ON run.id=roots.root_id OR run.parent_run_id=roots.root_id
@@ -80,11 +83,12 @@ export function auditSite(db, { hostname } = {}) {
   }
 
   const findings = new Map();
+  const inventory = [];
   const totals = { pages: pages.size, usable: 0, noUsableContent: 0, failed: 0, browserOnlyContent: 0 };
   const metadata = { title: new Map(), description: new Map() };
   function add(code, severity, message, nextStep, detail, group = '', value) {
-    const key = code + ':' + group;
-    if (!findings.has(key)) findings.set(key, { code, severity, message, nextStep,
+    const key = findingId(code, group);
+    if (!findings.has(key)) findings.set(key, { id: key, code, severity, message, nextStep,
       ...(value ? { value } : {}), affected: [] });
     findings.get(key).affected.push(detail);
   }
@@ -95,15 +99,21 @@ export function auditSite(db, { hostname } = {}) {
     if (!current) {
       totals.failed++;
       const last = rows.at(-1);
+      inventory.push({ requestedUrl: last.url, outcome: "failed", runId: last.run_id, reason: last.error });
       add('capture_failed', 'info', 'The latest scan failed.',
         'Resolve the capture error before interpreting this page.',
-        { requestedUrl: last.url, runId: last.run_id, reason: last.error });
+        { requestedUrl: last.url, runId: last.run_id, observedAt: last.finished_at, reason: last.error });
       continue;
     }
     const fields = JSON.parse(current.fields);
     const detail = evidence(current);
     const raw = current.mode === 'browser' ? captures.find(row => row.mode === 'http') : null;
-    if (raw && !contentUsable(raw, JSON.parse(raw.fields)) && contentUsable(current, fields)) {
+    const rawFields = raw ? JSON.parse(raw.fields) : null;
+    inventory.push({ requestedUrl: current.url,
+      outcome: contentUsable(current, fields) ? 'usable' : 'no_usable_content', capture: detail,
+      ...(raw ? { raw: evidence(raw), rawOutcome: raw.outcome,
+        rawNoindex: robots(rawFields).noindex, rawVsRendered: compareRenderedFields(rawFields, fields) } : {}) });
+    if (raw && !contentUsable(raw, rawFields) && contentUsable(current, fields)) {
       totals.browserOnlyContent++;
       add('browser_only_content', 'info', 'Usable content appeared after JavaScript rendering.',
         'Review rendering reliability and verify indexing separately in Search Console.',
@@ -121,8 +131,8 @@ export function auditSite(db, { hostname } = {}) {
     const directives = { metaRobots: fields.robots ?? null, xRobotsTag: fields.xRobotsTag ?? null };
     if (flags.noindex) add('noindex', 'high', 'A noindex directive is present.',
       'Confirm that this page is intended to be excluded.', { ...detail, ...directives });
-    else if (raw && robots(JSON.parse(raw.fields)).noindex) {
-      const rawFields = JSON.parse(raw.fields);
+    else if (raw && robots(rawFields).noindex) {
+
       add('raw_noindex', 'high', 'The HTTP capture declares noindex before JavaScript rendering.',
         'Review the raw directive before expecting this page to be indexed.',
         { ...detail, raw: evidence(raw), rawMetaRobots: rawFields.robots, rawXRobotsTag: rawFields.xRobotsTag });
@@ -170,5 +180,10 @@ export function auditSite(db, { hostname } = {}) {
     severityOrder[a.severity] - severityOrder[b.severity]
     || b.affected.length - a.affected.length || a.code.localeCompare(b.code));
   return { generatedAt: new Date().toISOString(), hostname: hostname ?? null, totals,
-    groups: sorted.length, findings: sorted.map(finding => ({ ...finding, affectedCount: finding.affected.length })) };
+    groups: sorted.length,
+    summary: sorted.map(finding => ({ id: finding.id, code: finding.code, severity: finding.severity,
+      issue: finding.message, affectedCount: finding.affected.length, nextStep: finding.nextStep,
+      examples: finding.affected.slice(0, 3).map(page => ({ url: page.requestedUrl, snapshotId: page.snapshotId ?? null })) })),
+    pages: inventory,
+    findings: sorted.map(finding => ({ ...finding, affectedCount: finding.affected.length })) };
 }

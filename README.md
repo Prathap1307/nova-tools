@@ -75,3 +75,22 @@ captures and content available only after JavaScript rendering. Findings include
 severity, a review action and snapshot IDs. Duplicate metadata uses usable pages
 and groups by final hostname. Canonical and robots findings show declarations
 observed on the site. Search Console data is needed to verify actual indexing.
+
+### Compare and share audits
+
+    npm run audit -- --db crawler.sqlite --site https://www.simpleparking.uk/ --export audit-current.json --csv findings-current.csv --compare audit-previous.json
+
+The JSON summary lists each issue, its affected count, a review step, and up to
+three example URLs. The CSV includes every affected URL with evidence and
+snapshot IDs. Paired captures include a rawVsRendered object under each page
+with raw and rendered canonical, title, description, meta robots and HTTP
+X-Robots-Tag values. Each field is unchanged, added, removed or changed.
+Only captures from the same scan are paired.
+
+The optional comparison reports one status for each finding and URL. A missing
+finding is resolved only after newer, comparable evidence verifies the page.
+Missing, failed and unusable pages remain unverified. Duplicate groups also
+require fresh comparable captures for previous members. Changing capture mode
+or extraction version may leave a finding unverified. Use the same hostname and
+scan coverage for the most informative comparisons. Original v0.3 JSON audits
+can be used as baselines. Use new filenames for JSON and CSV exports.
