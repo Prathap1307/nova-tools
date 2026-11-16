@@ -1,6 +1,6 @@
 {
   "name": "nova-tools",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -12,7 +12,8 @@
     "crawl": "node crawler/cli.mjs crawl",
     "audit": "node audit/cli.mjs",
     "links": "node links/cli.mjs",
-    "journey": "node journeys/cli.mjs"
+    "journey": "node journeys/cli.mjs",
+    "monitor": "node monitor/cli.mjs"
   },
   "dependencies": {
     "cheerio": "^1.1.2",

@@ -134,3 +134,30 @@ The JSON includes the status and evidence for each step. With --screenshot,
 failed or unverified steps with an open page save a viewport screenshot. Use
 new output filenames. Exit codes are 0 for pass, 2 for a failed check, 3 for
 unverified, and 1 for a CLI or input error.
+
+## Track website regressions
+
+    npm run monitor -- --site https://www.simpleparking.uk/ --db monitor.sqlite --crawl crawl.json --audit audit.json --links links.json --journey journey.json --export monitor-run.json
+
+Use extracts from the existing commands for the same site. The audit must be
+v0.4 or later and scoped with --site. Any report can be omitted on an
+individual run. The first import creates a baseline; subsequent imports read
+previous evidence from monitor.sqlite. The monitor stores source reports and
+run summaries together, separately from the crawler database.
+
+SEO findings are grouped and compared with the existing freshness rules.
+Link and journey changes include previous evidence, the last healthy check
+and the current result. Failed, missing and incompatible checks remain
+unverified. A changed crawl page count is coverage information; the monitor
+does not treat an omitted page as fixed.
+
+Optionally provide --retry-journey-config, --retry-crawl-db or both to rerun
+up to three failed critical checks. The journey config must match the original.
+Alternatively provide repeat-check reports with --retry-journey and
+--retry-links. A matching retry within 15 minutes can confirm the same issue
+or mark it intermittent if it passes. A different or unavailable retry is
+unverified. --retry-screenshot saves an image if the retried journey fails.
+Choose new filenames for reports and screenshots.
+
+This version combines point-in-time reports with optional live rechecks.
+Schedules and notifications are not part of this release.
