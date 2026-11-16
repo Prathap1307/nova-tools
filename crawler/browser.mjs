@@ -44,7 +44,11 @@ export function createRenderer() {
   const staticAssets = new Map();
   let cachedBytes = 0;
   return {
-    async render(document, { policy, allowedHosts, assetHosts, timeout = 12000 }) {
+    async render(document, options) {
+      return this.browse(document, options);
+    },
+    async browse(document, { policy, allowedHosts, assetHosts = [], timeout = 12000,
+      allowNavigation, expandAnswers = true }, visit) {
       browserPromise ??= chromium.launch({ headless: true,
         args: ['--disable-background-networking', '--disable-quic',
           '--force-webrtc-ip-handling-policy=disable_non_proxied_udp'],
@@ -64,6 +68,8 @@ export function createRenderer() {
       const target = document.finalUrl.href;
       const resourceHosts = new Set([...allowedHosts, ...assetHosts]);
       let initial = true;
+      let navigations = 0;
+      const blockedNavigations = [];
       let count = 0;
       let bytes = 0;
       try {
@@ -78,10 +84,26 @@ export function createRenderer() {
             if (request.method() !== 'GET') throw new Error('method excluded');
             let response;
             if (request.isNavigationRequest()) {
-              if (!initial || request.frame() !== page.mainFrame() || url.href !== target)
-                throw new Error('navigation excluded');
-              initial = false;
-              response = document;
+              if (request.frame() !== page.mainFrame()) throw new Error('frame navigation excluded');
+              if (initial && url.href === target) {
+                initial = false;
+                response = document;
+              } else {
+                try {
+                  if (navigations >= 1 || !allowNavigation?.(url))
+                    throw new Error('navigation excluded');
+                  navigations++;
+                  response = await policy.get(url, allowedHosts, { signal, checkUrl: target => {
+                    if (!allowNavigation(target)) throw new Error('redirect navigation excluded');
+                  } });
+                  if (response.finalUrl.href !== url.href)
+                    throw new Error('document redirect requires a separate configured step');
+                } catch (error) {
+                  if (blockedNavigations.length < 4)
+                    blockedNavigations.push({ url: url.href, reason: error.message });
+                  throw error;
+                }
+              }
             } else {
               if (!['script', 'stylesheet', 'xhr', 'fetch'].includes(request.resourceType()))
                 throw new Error('resource type excluded');
@@ -115,7 +137,17 @@ export function createRenderer() {
           }
         });
         const deadline = Date.now() + timeout;
+        if (visit) {
+          await context.addInitScript(() => {
+            document.addEventListener('submit', event => {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+            }, true);
+          });
+        }
         await page.goto(target, { waitUntil: 'domcontentloaded', timeout });
+        if (visit) return await visit(page, { deadline, blockedNavigations,
+          blockedResources: () => Object.fromEntries(blocked) });
         let content;
         let evidence;
         let lastSignature;
@@ -134,7 +166,7 @@ export function createRenderer() {
         } while (true);
         const final = webUrl(page.url());
         validateScope(final, allowedHosts);
-        const answers = await publicAnswers(page, deadline);
+        const answers = expandAnswers ? await publicAnswers(page, deadline) : [];
         return { ...document, finalUrl: final, body: Buffer.from(content), answers,
           headers: { ...document.headers, 'content-type': 'text/html; charset=utf-8' },
           blocked: Object.fromEntries(blocked) };

@@ -1,0 +1,19 @@
+{
+  "id": "simpleparking-heathrow-terminal-3-quote",
+  "startUrl": "https://www.simpleparking.uk/heathrow-terminal-3-parking",
+  "allowedPaths": ["/heathrow-terminal-3-parking", "/"],
+  "cta": { "role": "button", "name": "Book T3 Parking Now" },
+  "expected": {
+    "destinations": [{ "path": "/" }],
+    "landing": { "role": "heading", "name": "Get Your Quote" },
+    "scope": "#hero-search",
+    "controls": [
+      { "name": "Choose Airport", "selector": "label:text-is(\"Choose Airport\") >> xpath=../descendant::button" },
+      { "name": "Drop-off Date", "selector": "label:text-is(\"Drop-off Date\") >> xpath=../descendant::button" },
+      { "name": "Drop-off Time", "selector": "label:text-is(\"Drop-off Time\") >> xpath=../descendant::button" },
+      { "name": "Pick-up Date", "selector": "label:text-is(\"Pick-up Date\") >> xpath=../descendant::button" },
+      { "name": "Pick-up Time", "selector": "label:text-is(\"Pick-up Time\") >> xpath=../descendant::button" }
+    ],
+    "terminal": { "text": "Heathrow Terminal 3", "required": false }
+  }
+}

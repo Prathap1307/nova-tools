@@ -32,6 +32,7 @@ export function createPolicy({ fetcher = fetchPublic, delayMs = 0 } = {}) {
     return follow(url, {
       allowedHosts, fetcher: target => paced(target, options),
       async beforeFetch(target) {
+        options?.checkUrl?.(target);
         if ((await rules(target, allowedHosts)).isAllowed(target.href, agent) === false) {
           const error = new Error('Page disallowed by robots.txt: ' + target.pathname);
           error.code = 'ROBOTS_DENIED';

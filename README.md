@@ -112,3 +112,25 @@ New crawler snapshots preserve fragments. Existing snapshots from extraction
 versions 1–3 still work for HTTP link health. Recrawl source pages to add
 fragment evidence. The reports are point-in-time exports. Configured customer
 journey assertions and cross-run link history comparison are future work.
+
+## Check a booking or quote journey
+
+    npm run journey -- --config journeys/config/simpleparking-t3.json --export journey.json --screenshot failure.png
+
+The runner opens the configured public page in a 412×915 mobile Chromium
+viewport, locates one visible and enabled booking CTA, and taps it once. It
+checks the expected route and quote panel, required visible and enabled
+controls, and optional terminal context. The SimpleParking configuration
+expects the homepage quote panel and records Terminal 3 context as an
+observation. It does not assume terminal preselection is required.
+
+The browser applies the crawler's public-host, robots and request rules.
+The journey authorizes one top-level GET navigation to an explicitly configured
+same-origin path after the tap. It blocks submissions, POSTs, popups, other
+document routes and service workers. Routes with a server redirect need a
+separate configured step. It does not click Search Parking or enter form values.
+
+The JSON includes the status and evidence for each step. With --screenshot,
+failed or unverified steps with an open page save a viewport screenshot. Use
+new output filenames. Exit codes are 0 for pass, 2 for a failed check, 3 for
+unverified, and 1 for a CLI or input error.
