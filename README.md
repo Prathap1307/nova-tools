@@ -374,3 +374,13 @@ training, and app integration need separate verification. Source datasets
 for future training include MASSIVE (CC BY 4.0),
 Aya Dataset (Apache 2.0), and OpenAssistant OASST1 (Apache 2.0).
 Preserve their attribution and licensing when importing data.
+
+For llama.cpp on localhost:8080, add `--runtime llama`. For example:
+
+```powershell
+npm run --silent nlu -- --runtime llama --model qwen3-0.6b --output benchmark.json
+```
+
+Use an installed llama.cpp server with a downloaded GGUF model. The evaluator
+requests JSON output and disables Qwen3 thinking for this classification task.
+Model weights and runtime binaries stay outside this source repository.
