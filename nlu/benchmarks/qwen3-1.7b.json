@@ -1,0 +1,749 @@
+{
+  "predictions": [
+    {
+      "id": "1",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": null,
+        "date": "today",
+        "terminal": null
+      }
+    },
+    {
+      "id": "2",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": null,
+        "date": null,
+        "terminal": null
+      }
+    },
+    {
+      "id": "3",
+      "output": {
+        "intent": "call_managers",
+        "managers": [
+          "maya"
+        ],
+        "site": null,
+        "date": null,
+        "terminal": null
+      }
+    },
+    {
+      "id": "4",
+      "output": {
+        "intent": "call_managers",
+        "managers": [
+          "maya",
+          "alex"
+        ],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "t3"
+      }
+    },
+    {
+      "id": "5",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "6",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "yesterday",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "7",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": null,
+        "date": "today",
+        "terminal": null
+      }
+    },
+    {
+      "id": "8",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": null,
+        "date": "today",
+        "terminal": null
+      }
+    },
+    {
+      "id": "9",
+      "output": {
+        "intent": "call_managers",
+        "managers": [
+          "maya"
+        ],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "t3"
+      }
+    },
+    {
+      "id": "10",
+      "output": {
+        "intent": "meeting",
+        "managers": [
+          "maya",
+          "alex"
+        ],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "t3"
+      }
+    },
+    {
+      "id": "11",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "12",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "yesterday",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "13",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": null,
+        "date": "today",
+        "terminal": null
+      }
+    },
+    {
+      "id": "14",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": "null",
+        "date": "today",
+        "terminal": "null"
+      }
+    },
+    {
+      "id": "15",
+      "output": {
+        "intent": "greeting",
+        "managers": [
+          "maya"
+        ],
+        "site": "null",
+        "date": "null",
+        "terminal": "null"
+      }
+    },
+    {
+      "id": "16",
+      "output": {
+        "intent": "meeting",
+        "managers": [
+          "Maya",
+          "Alex"
+        ],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "17",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "18",
+      "output": {
+        "intent": "clarify",
+        "managers": [],
+        "site": "simpleparking",
+        "date": null,
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "19",
+      "output": {
+        "intent": "booking_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "T3"
+      }
+    },
+    {
+      "id": "20",
+      "output": {
+        "intent": "greeting",
+        "managers": [],
+        "site": "null",
+        "date": "today",
+        "terminal": "null"
+      }
+    },
+    {
+      "id": "21",
+      "output": {
+        "intent": "call_managers",
+        "managers": [
+          "maya"
+        ],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "t3"
+      }
+    },
+    {
+      "id": "22",
+      "output": {
+        "intent": "pickup_report",
+        "managers": [],
+        "site": "simpleparking",
+        "date": "today",
+        "terminal": "t5"
+      }
+    }
+  ],
+  "report": {
+    "model": "qwen3-1.7b",
+    "total": 22,
+    "passed": 6,
+    "languages": {
+      "en": {
+        "passed": 3,
+        "total": 10
+      },
+      "ta": {
+        "passed": 2,
+        "total": 6
+      },
+      "tanglish": {
+        "passed": 1,
+        "total": 6
+      }
+    },
+    "results": [
+      {
+        "id": "1",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "date"
+        ],
+        "expected": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": "today",
+          "terminal": null
+        }
+      },
+      {
+        "id": "2",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent"
+        ],
+        "expected": {
+          "intent": "smalltalk",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        }
+      },
+      {
+        "id": "3",
+        "language": "en",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "call_managers",
+          "managers": [
+            "maya"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "call_managers",
+          "managers": [
+            "maya"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        }
+      },
+      {
+        "id": "4",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "meeting",
+          "managers": [
+            "maya",
+            "alex"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "5",
+        "language": "en",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "6",
+        "language": "en",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "yesterday",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "yesterday",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "7",
+        "language": "ta",
+        "passed": false,
+        "mismatches": [
+          "date"
+        ],
+        "expected": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": "today",
+          "terminal": null
+        }
+      },
+      {
+        "id": "8",
+        "language": "ta",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "date"
+        ],
+        "expected": {
+          "intent": "smalltalk",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": "today",
+          "terminal": null
+        }
+      },
+      {
+        "id": "9",
+        "language": "ta",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "call_managers",
+          "managers": [
+            "maya"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "10",
+        "language": "ta",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "meeting",
+          "managers": [
+            "maya",
+            "alex"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "11",
+        "language": "ta",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "12",
+        "language": "ta",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "yesterday",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "yesterday",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "13",
+        "language": "tanglish",
+        "passed": false,
+        "mismatches": [
+          "date"
+        ],
+        "expected": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "greeting",
+          "managers": [],
+          "site": null,
+          "date": "today",
+          "terminal": null
+        }
+      },
+      {
+        "id": "14",
+        "language": "tanglish",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "smalltalk",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "15",
+        "language": "tanglish",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "call_managers",
+          "managers": [
+            "maya"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "16",
+        "language": "tanglish",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "meeting",
+          "managers": [
+            "maya",
+            "alex"
+          ],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "17",
+        "language": "tanglish",
+        "passed": true,
+        "mismatches": [],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "18",
+        "language": "tanglish",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "date"
+        ],
+        "expected": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "yesterday",
+          "terminal": "T3"
+        },
+        "actual": {
+          "intent": "clarify",
+          "managers": [],
+          "site": "simpleparking",
+          "date": null,
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "19",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "clarify",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": {
+          "intent": "booking_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T3"
+        }
+      },
+      {
+        "id": "20",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "clarify",
+          "managers": [],
+          "site": null,
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "21",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "seo_review",
+          "managers": [
+            "maya"
+          ],
+          "site": "simpleparking",
+          "date": null,
+          "terminal": null
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      },
+      {
+        "id": "22",
+        "language": "en",
+        "passed": false,
+        "mismatches": [
+          "intent",
+          "managers",
+          "site",
+          "date",
+          "terminal"
+        ],
+        "expected": {
+          "intent": "pickup_report",
+          "managers": [],
+          "site": "simpleparking",
+          "date": "today",
+          "terminal": "T5"
+        },
+        "actual": null,
+        "error": "Invalid prediction schema"
+      }
+    ]
+  }
+}
