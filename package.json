@@ -22,7 +22,8 @@
     "security": "node security/cli.mjs",
     "business": "node business/cli.mjs",
     "health": "node business/health-cli.mjs",
-    "booking-csv": "node business/booking-cli.mjs"
+    "booking-csv": "node business/booking-cli.mjs",
+    "nlu": "node nlu/cli.mjs"
   },
   "dependencies": {
     "cheerio": "^1.1.2",

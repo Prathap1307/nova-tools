@@ -1,0 +1,292 @@
+[
+  {
+    "id": "1",
+    "language": "en",
+    "text": "Hi",
+    "expected": {
+      "intent": "greeting",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "2",
+    "language": "en",
+    "text": "How are you?",
+    "expected": {
+      "intent": "smalltalk",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "3",
+    "language": "en",
+    "text": "Call Maya",
+    "expected": {
+      "intent": "call_managers",
+      "managers": [
+        "maya"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "4",
+    "language": "en",
+    "text": "Invite Maya and Alex to a meeting",
+    "expected": {
+      "intent": "meeting",
+      "managers": [
+        "maya",
+        "alex"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "5",
+    "language": "en",
+    "text": "Show today's SimpleParking T3 bookings",
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "today",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "6",
+    "language": "en",
+    "text": "Yesterday?",
+    "history": [
+      "Show today's SimpleParking T3 bookings"
+    ],
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "yesterday",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "7",
+    "language": "ta",
+    "text": "வணக்கம்",
+    "expected": {
+      "intent": "greeting",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "8",
+    "language": "ta",
+    "text": "எப்படி இருக்கிறாய்?",
+    "expected": {
+      "intent": "smalltalk",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "9",
+    "language": "ta",
+    "text": "மாயாவை கூப்பிடு",
+    "expected": {
+      "intent": "call_managers",
+      "managers": [
+        "maya"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "10",
+    "language": "ta",
+    "text": "மாயா அலெக்ஸ் இருவரையும் மீட்டிங்கிற்கு கூப்பிடு",
+    "expected": {
+      "intent": "meeting",
+      "managers": [
+        "maya",
+        "alex"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "11",
+    "language": "ta",
+    "text": "இன்று SimpleParking T3 bookings எத்தனை?",
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "today",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "12",
+    "language": "ta",
+    "text": "நேற்று?",
+    "history": [
+      "இன்று SimpleParking T3 bookings எத்தனை?"
+    ],
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "yesterday",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "13",
+    "language": "tanglish",
+    "text": "Vanakkam Nova",
+    "expected": {
+      "intent": "greeting",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "14",
+    "language": "tanglish",
+    "text": "epdi irukka?",
+    "expected": {
+      "intent": "smalltalk",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "15",
+    "language": "tanglish",
+    "text": "Maya vai koopidu",
+    "expected": {
+      "intent": "call_managers",
+      "managers": [
+        "maya"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "16",
+    "language": "tanglish",
+    "text": "Maya Alex rendu peraiyum meeting ku koopidu",
+    "expected": {
+      "intent": "meeting",
+      "managers": [
+        "maya",
+        "alex"
+      ],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "17",
+    "language": "tanglish",
+    "text": "inniku SimpleParking T3 bookings evlo?",
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "today",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "18",
+    "language": "tanglish",
+    "text": "nethu?",
+    "history": [
+      "inniku SimpleParking T3 bookings evlo?"
+    ],
+    "expected": {
+      "intent": "booking_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "yesterday",
+      "terminal": "T3"
+    }
+  },
+  {
+    "id": "19",
+    "language": "en",
+    "text": "Show the report",
+    "expected": {
+      "intent": "clarify",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "20",
+    "language": "en",
+    "text": "Do not call Maya",
+    "expected": {
+      "intent": "clarify",
+      "managers": [],
+      "site": null,
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "21",
+    "language": "en",
+    "text": "Hi Maya, show SimpleParking SEO",
+    "expected": {
+      "intent": "seo_review",
+      "managers": [
+        "maya"
+      ],
+      "site": "simpleparking",
+      "date": null,
+      "terminal": null
+    }
+  },
+  {
+    "id": "22",
+    "language": "en",
+    "text": "Today SimpleParking T5 pickups",
+    "expected": {
+      "intent": "pickup_report",
+      "managers": [],
+      "site": "simpleparking",
+      "date": "today",
+      "terminal": "T5"
+    }
+  }
+]

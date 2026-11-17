@@ -347,3 +347,30 @@ Duplicate IDs are excluded from both totals. Missing or invalid pickup
 timestamps leave the booking in the received count and produce a warning
 when applicable. Findings include source line numbers. Exit codes are
 0 for a clean report, 2 for a report with findings, and 1 for an input error.
+
+## Local multilingual NLU evaluation
+
+The starter benchmark contains 22 hand-authored English, Tamil and Tanglish
+cases. It covers greetings, small talk, manager calls, multiple-person
+meetings, bookings, pickups, follow-ups, and clarification. Review and expand
+these expectations as Nova's supported actions grow.
+
+```powershell
+npm run --silent nlu -- --model qwen3:4b --output nlu-result.json
+```
+
+This command expects an existing Ollama server on localhost:11434 and an
+installed model. It calls that local endpoint once per case and reports exact
+intent/entity accuracy per language, with individual mismatches. Results
+contain inputs and model predictions, so use synthetic inputs for shared
+reports. Run with precomputed predictions using
+`--predictions predictions.json` instead of `--model`. Prediction files are
+arrays of `{ "id": "1", "output": { ... } }` using the schema in
+`nlu/cases.json`. Exit codes are 0 for all correct, 2 for mismatches or failed
+model requests, and 1 for input errors.
+
+This is an evaluation kit. Model installation, measured language quality,
+training, and app integration need separate verification. Source datasets
+for future training include MASSIVE (CC BY 4.0),
+Aya Dataset (Apache 2.0), and OpenAssistant OASST1 (Apache 2.0).
+Preserve their attribution and licensing when importing data.
