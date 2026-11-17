@@ -332,3 +332,18 @@ first failure time and the latest error. One recovery alert follows when the
 probe passes. Observations and alerts are stored together in SQLite, so
 deduplication survives restarting the process. For a bounded smoke test use
 `--interval-seconds 1 --runs 2`. Stop the foreground runner with Ctrl+C.
+
+### Booking & operations CSV
+
+```powershell
+npm run --silent booking-csv -- --file test/fixtures/bookings-sample.csv --date 2026-06-02 --time-zone Europe/London
+```
+
+Required headers are `id,terminal,status,createdAt,pickupAt`. Status is
+`confirmed`, `pending`, or `cancelled`. Timestamps require an explicit UTC
+offset or `Z`. The report counts incoming bookings by status and scheduled
+pickups for confirmed bookings, using the selected local date for each.
+Duplicate IDs are excluded from both totals. Missing or invalid pickup
+timestamps leave the booking in the received count and produce a warning
+when applicable. Findings include source line numbers. Exit codes are
+0 for a clean report, 2 for a report with findings, and 1 for an input error.
